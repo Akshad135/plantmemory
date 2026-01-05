@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Cactus -->
+    <path android:pathData="M12,22 L12,8" android:strokeWidth="3" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,14 Q8,14 6,10" android:strokeWidth="2" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,12 Q16,12 18,8" android:strokeWidth="2" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+</vector>

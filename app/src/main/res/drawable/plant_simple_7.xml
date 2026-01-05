@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Poppy flower -->
+    <path
+        android:pathData="M12,22 L12,10"
+        android:strokeWidth="1.2"
+        android:strokeColor="#4338CA"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M7,7 Q9,4 12,5 Q15,4 17,7 Q15,10 12,9 Q9,10 7,7"
+        android:strokeWidth="1"
+        android:strokeColor="#4338CA"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <!-- Center circle at 12,7 r=1 -->
+    <path
+        android:pathData="M12,6 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2"
+        android:fillColor="#4338CA"/>
+</vector>

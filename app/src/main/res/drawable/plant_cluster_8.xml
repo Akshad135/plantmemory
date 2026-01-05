@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Cotton plant -->
+    <path android:pathData="M12,22 L12,10" android:strokeWidth="1.2" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,14 Q8,12 6,14" android:strokeWidth="0.8" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,16 Q16,14 18,16" android:strokeWidth="0.8" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <!-- Circles: 9,7 r=2.5, 15,6 r=2, 12,4 r=2 -->
+    <path android:pathData="M9,4.5 a2.5,2.5 0 1,0 0,5 a2.5,2.5 0 1,0 0,-5" android:strokeWidth="1" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+    <path android:pathData="M15,4 a2,2 0 1,0 0,4 a2,2 0 1,0 0,-4" android:strokeWidth="1" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+    <path android:pathData="M12,2 a2,2 0 1,0 0,4 a2,2 0 1,0 0,-4" android:strokeWidth="1" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+</vector>

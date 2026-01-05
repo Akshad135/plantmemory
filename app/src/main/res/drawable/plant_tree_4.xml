@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Bonsai style -->
+    <path
+        android:pathData="M12,22 L12,16"
+        android:strokeWidth="1.5"
+        android:strokeColor="#4338CA"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M12,16 Q8,14 6,10"
+        android:strokeWidth="1.2"
+        android:strokeColor="#4338CA"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M12,16 Q16,12 18,8"
+        android:strokeWidth="1.2"
+        android:strokeColor="#4338CA"
+        android:strokeLineCap="round"/>
+    <!-- Foliage clusters: 6,9 r=2.5 and 18,7 r=2.5 -->
+    <path
+        android:pathData="M6,6.5 a2.5,2.5 0 1,0 0,5 a2.5,2.5 0 1,0 0,-5"
+        android:strokeWidth="1"
+        android:strokeColor="#4338CA"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M18,4.5 a2.5,2.5 0 1,0 0,5 a2.5,2.5 0 1,0 0,-5"
+        android:strokeWidth="1"
+        android:strokeColor="#4338CA"
+        android:fillColor="#00000000"/>
+</vector>

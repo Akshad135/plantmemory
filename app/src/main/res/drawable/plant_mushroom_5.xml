@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Toadstool with spots -->
+    <path android:pathData="M12,22 L12,14" android:strokeWidth="2" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M4,14 Q4,6 12,4 Q20,6 20,14 Z" android:strokeWidth="1" android:strokeColor="#4338CA" android:fillColor="#00000000" android:strokeLineCap="round"/>
+    <!-- Spots: 10,9 r=1.2, 14,8 r=1, 12,12 r=0.8 -->
+    <path android:pathData="M10,7.8 a1.2,1.2 0 1,0 0,2.4 a1.2,1.2 0 1,0 0,-2.4" android:strokeWidth="0.6" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+    <path android:pathData="M14,7 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:strokeWidth="0.6" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+    <path android:pathData="M12,11.2 a0.8,0.8 0 1,0 0,1.6 a0.8,0.8 0 1,0 0,-1.6" android:strokeWidth="0.6" android:strokeColor="#4338CA" android:fillColor="#00000000"/>
+</vector>

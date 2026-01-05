@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Multi-flower cluster -->
+    <path
+        android:pathData="M12,22 L12,14"
+        android:strokeWidth="1.2"
+        android:strokeColor="#4338CA"
+        android:strokeLineCap="round"/>
+    <path android:pathData="M12,14 L8,10" android:strokeWidth="0.8" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,14 L16,10" android:strokeWidth="0.8" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <path android:pathData="M12,14 L12,8" android:strokeWidth="0.8" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <!-- Filled circles as paths at 8,9 r=1.5 -->
+    <path
+        android:pathData="M8,7.5 a1.5,1.5 0 1,0 0,3 a1.5,1.5 0 1,0 0,-3"
+        android:fillColor="#4338CA"/>
+    <!-- at 16,9 r=1.5 -->
+    <path
+        android:pathData="M16,7.5 a1.5,1.5 0 1,0 0,3 a1.5,1.5 0 1,0 0,-3"
+        android:fillColor="#4338CA"/>
+    <!-- at 12,7 r=1.5 -->
+    <path
+        android:pathData="M12,5.5 a1.5,1.5 0 1,0 0,3 a1.5,1.5 0 1,0 0,-3"
+        android:fillColor="#4338CA"/>
+</vector>

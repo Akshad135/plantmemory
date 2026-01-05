@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Indigo -->
+    <color name="indigo_primary">#4338CA</color>
+    <color name="indigo_light">#6366F1</color>
+    <color name="indigo_dark">#3730A3</color>
+    
+    <!-- Background Colors -->
+    <color name="background_light">#F8F7F4</color>
+    <color name="surface_light">#EFEEEB</color>
+    <color name="surface_variant">#E5E4E1</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#1E1B4B</color>
+    <color name="text_secondary">#4338CA</color>
+    <color name="text_muted">#6B7280</color>
+    
+    <!-- Widget specific -->
+    <color name="widget_background">#F5F5F0</color>
+</resources>

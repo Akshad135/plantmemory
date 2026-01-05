@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Lavender style -->
+    <path android:pathData="M12,22 L12,6" android:strokeWidth="1" android:strokeColor="#4338CA" android:strokeLineCap="round"/>
+    <!-- Filled circles as dots -->
+    <path android:pathData="M12,4 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+    <path android:pathData="M11,6 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+    <path android:pathData="M13,6 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+    <path android:pathData="M11,8 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+    <path android:pathData="M13,8 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+    <path android:pathData="M12,10 a1,1 0 1,0 0,2 a1,1 0 1,0 0,-2" android:fillColor="#4338CA"/>
+</vector>
