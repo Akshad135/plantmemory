@@ -24,7 +24,7 @@ interface JournalDao {
      */
     @Query("""
         SELECT * FROM journal_entries 
-        WHERE strftime('%Y', timestamp / 1000, 'unixepoch') = :year 
+        WHERE strftime('%Y', timestamp / 1000, 'unixepoch', 'localtime') = :year 
         ORDER BY timestamp DESC
     """)
     fun getEntriesByYear(year: String): Flow<List<JournalEntry>>
@@ -74,7 +74,7 @@ interface JournalDao {
     /**
      * Get distinct years that have entries.
      */
-    @Query("SELECT DISTINCT strftime('%Y', timestamp / 1000, 'unixepoch') as year FROM journal_entries ORDER BY year DESC")
+    @Query("SELECT DISTINCT strftime('%Y', timestamp / 1000, 'unixepoch', 'localtime') as year FROM journal_entries ORDER BY year DESC")
     fun getDistinctYears(): Flow<List<String>>
     
     /**
@@ -88,7 +88,7 @@ interface JournalDao {
      */
     @Query("""
         SELECT * FROM journal_entries 
-        WHERE strftime('%Y', timestamp / 1000, 'unixepoch') = :year 
+        WHERE strftime('%Y', timestamp / 1000, 'unixepoch', 'localtime') = :year 
         ORDER BY timestamp DESC 
         LIMIT :limit
     """)
@@ -97,10 +97,11 @@ interface JournalDao {
     /**
      * Find entry for a specific date (day/month/year).
      * Used for one-plant-per-day logic.
+     * Uses 'localtime' to match the app's local date formatting.
      */
     @Query("""
         SELECT * FROM journal_entries 
-        WHERE strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch') = :dateString
+        WHERE strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch', 'localtime') = :dateString
         LIMIT 1
     """)
     suspend fun getEntryByDate(dateString: String): JournalEntry?
