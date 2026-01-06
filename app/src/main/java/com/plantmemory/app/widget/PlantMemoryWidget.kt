@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.remember
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -164,7 +165,7 @@ class PlantMemoryWidget : GlanceAppWidget() {
                             )
                         )
                     } else {
-                        AllPlantsGrid(entries = entries)
+                        AllPlantsGrid(context = context, entries = entries)
                     }
                 }
             }
@@ -172,40 +173,18 @@ class PlantMemoryWidget : GlanceAppWidget() {
     }
     
     @Composable
-    private fun AllPlantsGrid(entries: List<JournalEntry>) {
-        val count = entries.size
-        val (columns, iconSize) = when {
-            count <= 9 -> Pair(3, 26.dp)
-            count <= 16 -> Pair(4, 22.dp)
-            count <= 25 -> Pair(5, 18.dp)
-            count <= 36 -> Pair(6, 15.dp)
-            count <= 49 -> Pair(7, 13.dp)
-            count <= 64 -> Pair(8, 11.dp)
-            count <= 81 -> Pair(9, 10.dp)
-            count <= 100 -> Pair(10, 9.dp)
-            count <= 144 -> Pair(12, 7.dp)
-            count <= 196 -> Pair(14, 6.dp)
-            count <= 256 -> Pair(16, 5.dp)
-            else -> Pair(18, 4.dp)
-        }
+    private fun AllPlantsGrid(context: Context, entries: List<JournalEntry>) {
+        // Use a single generated bitmap to display all icons.
+        // This bypasses RemoteViews limits and guarantees all 365+ icons are shown.
+        val bitmap = WidgetBitmapGenerator.generateGridBitmap(context, entries)
         
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            entries.chunked(columns).forEach { row ->
-                Row {
-                    row.forEach { entry ->
-                        Image(
-                            provider = ImageProvider(
-                                PlantResources.getPlantDrawable(entry.plantType, entry.plantVariant)
-                            ),
-                            contentDescription = null,
-                            modifier = GlanceModifier.size(iconSize)
-                        )
-                    }
-                }
-            }
-        }
+        // Display as a single image filling the space
+        Image(
+            provider = ImageProvider(bitmap),
+            contentDescription = "Garden Grid",
+            contentScale = androidx.glance.layout.ContentScale.Fit,
+            modifier = GlanceModifier.fillMaxSize()
+        )
     }
 }
 

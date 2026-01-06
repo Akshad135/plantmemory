@@ -28,6 +28,11 @@ class MainActivity : ComponentActivity() {
         // Check if opened from widget - should show latest memory popup
         val showLatestMemory = intent?.getBooleanExtra(EXTRA_SHOW_LATEST_MEMORY, false) ?: false
         
+        // Consume the extra so it doesn't re-trigger on activity recreation
+        if (showLatestMemory) {
+            intent?.removeExtra(EXTRA_SHOW_LATEST_MEMORY)
+        }
+        
         setContent {
             PlantMemoryTheme {
                 PlantMemoryNavGraph(

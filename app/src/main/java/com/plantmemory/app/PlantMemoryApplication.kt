@@ -3,6 +3,8 @@ package com.plantmemory.app
 import android.app.Application
 import com.plantmemory.app.data.AppDatabase
 import com.plantmemory.app.data.JournalRepository
+import com.plantmemory.app.debug.DebugConfig
+import com.plantmemory.app.debug.DummyDataGenerator
 import com.plantmemory.app.widget.WidgetUpdateWorker
 
 /**
@@ -17,6 +19,11 @@ class PlantMemoryApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        
+        // Seed dummy data if enabled (for testing)
+        if (DebugConfig.USE_DUMMY_DATA) {
+            DummyDataGenerator.seedIfEmpty(database.journalDao())
+        }
         
         // Schedule periodic widget updates every 6 hours
         WidgetUpdateWorker.schedule(this)

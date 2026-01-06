@@ -105,5 +105,17 @@ interface JournalDao {
         LIMIT 1
     """)
     suspend fun getEntryByDate(dateString: String): JournalEntry?
+    
+    /**
+     * Insert multiple entries at once (for bulk seeding).
+     */
+    @Insert
+    suspend fun insertAll(entries: List<JournalEntry>)
+    
+    /**
+     * Get the total count of entries (sync version for debug seeding).
+     */
+    @Query("SELECT COUNT(*) FROM journal_entries")
+    suspend fun getEntryCountSync(): Int
 }
 
