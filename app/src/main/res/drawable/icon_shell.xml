@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Shell/Seashell doodle -->
+    <path
+        android:pathData="M12,20c5,0 9,-4 9,-9c0,-5 -4,-8 -9,-8c-3,0 -5,1 -7,3c2,1 4,3 4,6c0,4 -3,6 -6,7c2,1 5,1 9,1z"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M8,8c1.5,0 3,1 4,3M6,13c1,0 2.5,0.5 4,2"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+</vector>

@@ -1,19 +1,71 @@
 package com.plantmemory.app.data
 
 /**
- * Enum representing the different plant categories/types
- * that users can select when creating a journal entry.
+ * Enum representing all available icon types for journal entries.
+ * Expanded from original 5 plant types to 32 diverse doodle icons.
  */
 enum class PlantType {
-    SIMPLE,    // Basic stems and single flowers
-    TREE,      // Bushes and tree shapes
-    CLUSTER,   // Berry clusters and grouped flowers
-    GRASS,     // Tall reeds and grasses
-    MUSHROOM;  // Mushrooms and succulents
+    // Original plant types (kept for backwards compatibility)
+    SIMPLE,
+    TREE,
+    CLUSTER,
+    GRASS,
+    MUSHROOM,
+    
+    // Flowers
+    SUNFLOWER,
+    TULIP,
+    ROSE,
+    DAISY,
+    
+    // Plants
+    CACTUS,
+    LEAF,
+    SEEDLING,
+    CLOVER,
+    FERN,
+    
+    // Creatures
+    BUTTERFLY,
+    BEE,
+    LADYBUG,
+    SNAIL,
+    BIRD,
+    CAT,
+    
+    // Weather/Sky
+    SUN,
+    MOON,
+    STAR,
+    CLOUD,
+    RAINBOW,
+    RAINDROP,
+    
+    // Garden/Nature
+    WATERING_CAN,
+    POT,
+    ACORN,
+    PINECONE,
+    BIRDHOUSE,
+    
+    // Fruits
+    APPLE,
+    CHERRY,
+    
+    // Misc
+    HEART,
+    SPARKLE,
+    FEATHER,
+    SHELL;
     
     companion object {
         fun fromOrdinal(ordinal: Int): PlantType {
             return entries.getOrElse(ordinal) { SIMPLE }
         }
+        
+        /**
+         * Get the new expanded icon types (excluding original 5 for selector display)
+         */
+        fun getExpandedTypes(): List<PlantType> = entries.toList()
     }
 }

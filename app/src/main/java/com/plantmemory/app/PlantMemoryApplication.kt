@@ -3,10 +3,11 @@ package com.plantmemory.app
 import android.app.Application
 import com.plantmemory.app.data.AppDatabase
 import com.plantmemory.app.data.JournalRepository
+import com.plantmemory.app.widget.WidgetUpdateWorker
 
 /**
  * Application class for Plant Memory.
- * Initializes the database and repository.
+ * Initializes the database, repository, and schedules widget updates.
  */
 class PlantMemoryApplication : Application() {
     
@@ -16,6 +17,9 @@ class PlantMemoryApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        
+        // Schedule periodic widget updates every 6 hours
+        WidgetUpdateWorker.schedule(this)
     }
     
     companion object {

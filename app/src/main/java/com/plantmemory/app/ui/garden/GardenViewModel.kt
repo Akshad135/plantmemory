@@ -83,6 +83,23 @@ class GardenViewModel(
         _selectedYear.value = year
     }
     
+    fun deleteEntry(entry: JournalEntry) {
+        val deletedYear = Calendar.getInstance().apply { 
+            timeInMillis = entry.timestamp 
+        }.get(Calendar.YEAR)
+        
+        viewModelScope.launch {
+            repository.deleteEntry(entry)
+            
+            // After deletion, check if we should switch to current year
+            // This prevents showing empty page when deleting last entry of a past year
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            if (deletedYear != currentYear && _selectedYear.value == deletedYear) {
+                _selectedYear.value = currentYear
+            }
+        }
+    }
+    
     private fun groupEntriesByDate(entries: List<JournalEntry>): List<DateGroup> {
         val dateFormat = SimpleDateFormat("EEEE, MM.dd", Locale.US)
         val monthYearFormat = SimpleDateFormat("MMMM yyyy", Locale.US)

@@ -28,8 +28,11 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,23 +45,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.plantmemory.app.ui.components.BottomNavBar
 import com.plantmemory.app.ui.components.BottomNavItem
-import com.plantmemory.app.ui.theme.IndigoPrimary
-import com.plantmemory.app.ui.theme.TextMuted
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 
+private val SmoothEasing = CubicBezierEasing(0.4f, 0.0f, 0.2f, 1.0f)
+
 /**
- * Entry screen for adding new journal entries.
- * Includes bottom navigation for easy switching between screens.
+ * Entry screen with Material 3 styling.
  */
 @Composable
 fun EntryScreen(
@@ -68,7 +70,7 @@ fun EntryScreen(
 ) {
     val uiState = viewModel.uiState
     val focusRequester = remember { FocusRequester() }
-    val dateFormat = remember { SimpleDateFormat("EEEE, MM.dd", Locale.US) }
+    val dateFormat = remember { SimpleDateFormat("EEEE, MMM d", Locale.US) }
     var dragOffset by remember { mutableFloatStateOf(0f) }
     
     LaunchedEffect(Unit) {
@@ -102,74 +104,88 @@ fun EntryScreen(
                         }
                     )
                 }
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 20.dp)
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             
-            // "edit" label chip
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
+            // Header chip
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "edit",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "new memory",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
                 )
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             
-            // Date selector with arrows
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+            // Date selector with M3 styling
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                IconButton(
-                    onClick = { viewModel.goToPreviousDay() }
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Previous day",
-                        tint = IndigoPrimary
+                    IconButton(
+                        onClick = { viewModel.goToPreviousDay() },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Previous day"
+                        )
+                    }
+                    
+                    Text(
+                        text = dateFormat.format(Date(uiState.selectedDate)),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 12.dp)
                     )
-                }
-                
-                Text(
-                    text = dateFormat.format(Date(uiState.selectedDate)).lowercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = IndigoPrimary,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                
-                IconButton(
-                    onClick = { viewModel.goToNextDay() },
-                    enabled = viewModel.canGoToNextDay()
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Next day",
-                        tint = if (viewModel.canGoToNextDay()) IndigoPrimary else IndigoPrimary.copy(alpha = 0.3f)
-                    )
+                    
+                    IconButton(
+                        onClick = { viewModel.goToNextDay() },
+                        enabled = viewModel.canGoToNextDay(),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "Next day"
+                        )
+                    }
                 }
             }
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Plant type selector
+            // Icon selector
             PlantTypeSelector(
                 selectedType = uiState.selectedPlantType,
                 onTypeSelected = { viewModel.selectPlantType(it) },
                 modifier = Modifier.fillMaxWidth(),
             )
             
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             
             // Text input area
             Box(
@@ -189,14 +205,14 @@ fun EntryScreen(
                         lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
                         color = MaterialTheme.colorScheme.onBackground
                     ),
-                    cursorBrush = SolidColor(IndigoPrimary),
+                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     decorationBox = { innerTextField ->
                         Box {
                             if (uiState.text.isEmpty()) {
                                 Text(
-                                    text = "Write your memory...",
+                                    text = "What happened today?",
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = TextMuted
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                                 )
                             }
                             innerTextField()
@@ -205,14 +221,13 @@ fun EntryScreen(
                 )
             }
             
-            // Done button
-            val smoothEasing = CubicBezierEasing(0.4f, 0.0f, 0.2f, 1.0f)
+            // Done button with M3 styling
             AnimatedVisibility(
                 visible = uiState.text.isNotBlank(),
-                enter = fadeIn(tween(200, easing = smoothEasing)) + 
-                        scaleIn(initialScale = 0.9f, animationSpec = tween(200, easing = smoothEasing)),
-                exit = fadeOut(tween(150, easing = smoothEasing)) + 
-                       scaleOut(targetScale = 0.9f, animationSpec = tween(150, easing = smoothEasing))
+                enter = fadeIn(tween(200, easing = SmoothEasing)) + 
+                        scaleIn(initialScale = 0.9f, animationSpec = tween(200, easing = SmoothEasing)),
+                exit = fadeOut(tween(150, easing = SmoothEasing)) + 
+                       scaleOut(targetScale = 0.9f, animationSpec = tween(150, easing = SmoothEasing))
             ) {
                 Button(
                     onClick = {
@@ -223,18 +238,19 @@ fun EntryScreen(
                     },
                     enabled = !uiState.isSaving,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = IndigoPrimary,
-                        contentColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = 12.dp)
                 ) {
                     Text(
-                        text = if (uiState.isSaving) "Saving..." else "Done",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                        text = if (uiState.isSaving) "Saving..." else "Save",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
                     )
                 }
             }

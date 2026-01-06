@@ -39,13 +39,11 @@ import com.plantmemory.app.data.JournalEntry
 import com.plantmemory.app.ui.components.PlantResources
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
-import kotlin.math.ceil
 
 /**
- * 4x4 Plant Memory Garden Widget.
- * Shows ALL plants for the year in a grid format.
- * Tries current year first, falls back to last year if empty.
- * Bottom shows year and plant count.
+ * Material 3 styled 4x4 Plant Memory Garden Widget.
+ * Shows ALL plants for the year in a dynamic grid.
+ * Refined design with header badge and plant count.
  */
 class PlantMemoryWidget : GlanceAppWidget() {
     
@@ -58,14 +56,13 @@ class PlantMemoryWidget : GlanceAppWidget() {
         
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         
-        // Try current year first - get ALL entries (up to 366 for leap year)
         var yearEntries = repository?.let { 
             runBlocking { it.getEntriesByYearSync(currentYear, 366) }
         } ?: emptyList()
         
         var displayYear = currentYear
         
-        // If current year is empty, try last year
+        // Fallback to last year if empty
         if (yearEntries.isEmpty()) {
             val lastYear = currentYear - 1
             yearEntries = repository?.let { 
@@ -94,7 +91,6 @@ class PlantMemoryWidget : GlanceAppWidget() {
         entries: List<JournalEntry>,
         year: Int
     ) {
-        // Create intent to open home screen and show latest memory
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra(MainActivity.EXTRA_SHOW_LATEST_MEMORY, true)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -104,61 +100,72 @@ class PlantMemoryWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(ColorProvider(R.color.widget_background))
-                .cornerRadius(24.dp)
+                .cornerRadius(28.dp)
                 .clickable(actionStartActivity(intent))
-                .padding(12.dp)
+                .padding(14.dp)
         ) {
             Column(
                 modifier = GlanceModifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Plant grid - takes most of the space
-                Box(
-                    modifier = GlanceModifier
-                        .fillMaxWidth()
-                        .defaultWeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (entries.isEmpty()) {
-                        Text(
-                            text = "Start your garden",
-                            style = TextStyle(
-                                color = ColorProvider(R.color.text_muted),
-                                fontSize = 12.sp
-                            )
-                        )
-                    } else {
-                        // Show ALL plants in a responsive grid
-                        AllPlantsGrid(entries = entries)
-                    }
-                }
-                
-                Spacer(modifier = GlanceModifier.height(4.dp))
-                
-                // Bottom bar with year and plant count
+                // Header with year badge and count
                 Row(
                     modifier = GlanceModifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Year badge
+                    Box(
+                        modifier = GlanceModifier
+                            .background(ColorProvider(R.color.indigo_container))
+                            .cornerRadius(8.dp)
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = year.toString(),
+                            style = TextStyle(
+                                color = ColorProvider(R.color.indigo_primary),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                    
+                    Spacer(modifier = GlanceModifier.defaultWeight())
+                    
                     Text(
-                        text = year.toString(),
+                        text = "${entries.size} memories",
                         style = TextStyle(
                             color = ColorProvider(R.color.text_muted),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Medium
                         )
                     )
-                    
-                    Spacer(modifier = GlanceModifier.defaultWeight())
-                    
-                    Text(
-                        text = "${entries.size} plants",
-                        style = TextStyle(
-                            color = ColorProvider(R.color.text_muted),
-                            fontSize = 11.sp
+                }
+                
+                Spacer(modifier = GlanceModifier.height(8.dp))
+                
+                // Plant grid
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .defaultWeight()
+                        .background(ColorProvider(R.color.surface_variant))
+                        .cornerRadius(16.dp)
+                        .padding(6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (entries.isEmpty()) {
+                        Text(
+                            text = "tap to add your first memory",
+                            style = TextStyle(
+                                color = ColorProvider(R.color.text_muted),
+                                fontSize = 11.sp
+                            )
                         )
-                    )
+                    } else {
+                        AllPlantsGrid(entries = entries)
+                    }
                 }
             }
         }
@@ -166,23 +173,20 @@ class PlantMemoryWidget : GlanceAppWidget() {
     
     @Composable
     private fun AllPlantsGrid(entries: List<JournalEntry>) {
-        // Calculate optimal grid size based on entry count
-        // For 4x4 widget, we have roughly 120dp x 120dp usable space
-        // Adjust icon size and columns based on count
         val count = entries.size
         val (columns, iconSize) = when {
-            count <= 9 -> Pair(3, 28.dp)      // 3x3 grid, larger icons
-            count <= 16 -> Pair(4, 24.dp)     // 4x4 grid
-            count <= 25 -> Pair(5, 20.dp)     // 5x5 grid
-            count <= 36 -> Pair(6, 16.dp)     // 6x6 grid
-            count <= 49 -> Pair(7, 14.dp)     // 7x7 grid
-            count <= 64 -> Pair(8, 12.dp)     // 8x8 grid
-            count <= 81 -> Pair(9, 10.dp)     // 9x9 grid
-            count <= 100 -> Pair(10, 9.dp)    // 10x10 grid
-            count <= 144 -> Pair(12, 7.dp)    // 12x12 grid
-            count <= 196 -> Pair(14, 6.dp)    // 14x14 grid
-            count <= 256 -> Pair(16, 5.dp)    // 16x16 grid
-            else -> Pair(19, 4.dp)            // 19 columns for 365 days
+            count <= 9 -> Pair(3, 26.dp)
+            count <= 16 -> Pair(4, 22.dp)
+            count <= 25 -> Pair(5, 18.dp)
+            count <= 36 -> Pair(6, 15.dp)
+            count <= 49 -> Pair(7, 13.dp)
+            count <= 64 -> Pair(8, 11.dp)
+            count <= 81 -> Pair(9, 10.dp)
+            count <= 100 -> Pair(10, 9.dp)
+            count <= 144 -> Pair(12, 7.dp)
+            count <= 196 -> Pair(14, 6.dp)
+            count <= 256 -> Pair(16, 5.dp)
+            else -> Pair(18, 4.dp)
         }
         
         Column(

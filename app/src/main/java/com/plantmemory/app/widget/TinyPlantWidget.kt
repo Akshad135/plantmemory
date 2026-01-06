@@ -29,9 +29,8 @@ import com.plantmemory.app.ui.components.PlantResources
 import kotlinx.coroutines.runBlocking
 
 /**
- * 1x1 Tiny Plant Widget.
- * Shows just the latest plant icon.
- * Opens to home screen showing latest memory when clicked.
+ * Material 3 styled 1x1 Tiny Plant Widget.
+ * Shows just the latest plant icon in a container.
  */
 class TinyPlantWidget : GlanceAppWidget() {
     
@@ -42,7 +41,6 @@ class TinyPlantWidget : GlanceAppWidget() {
             null
         }
         
-        // Get latest entry
         val latestEntry = repository?.let { 
             runBlocking { it.getRecentEntries(1) }
         }?.firstOrNull()
@@ -60,7 +58,6 @@ class TinyPlantWidget : GlanceAppWidget() {
     
     @Composable
     private fun TinyWidgetContent(context: Context, plantDrawable: Int) {
-        // Create intent to open home screen and show latest memory
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra(MainActivity.EXTRA_SHOW_LATEST_MEMORY, true)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -70,22 +67,31 @@ class TinyPlantWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(ColorProvider(R.color.widget_background))
-                .cornerRadius(16.dp)
+                .cornerRadius(20.dp)
                 .clickable(actionStartActivity(intent))
-                .padding(8.dp),
+                .padding(6.dp),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                provider = ImageProvider(plantDrawable),
-                contentDescription = "Latest plant",
-                modifier = GlanceModifier.size(40.dp)
-            )
+            // Icon container with accent background
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .background(ColorProvider(R.color.indigo_container))
+                    .cornerRadius(14.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    provider = ImageProvider(plantDrawable),
+                    contentDescription = "Latest plant",
+                    modifier = GlanceModifier.size(36.dp)
+                )
+            }
         }
     }
 }
 
 /**
- * Receiver for the tiny 1x1 widget.
+ * Receiver for the 1x1 widget.
  */
 class TinyPlantWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = TinyPlantWidget()

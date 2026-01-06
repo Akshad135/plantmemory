@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Bloom flower - 8 petal design -->
+    
+    <!-- Center dot -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M54,54 m-6,0 a6,6 0 1,1 12,0 a6,6 0 1,1 -12,0"/>
+    
+    <!-- Top petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M54,26 Q62,38 54,48 Q46,38 54,26"/>
+    
+    <!-- Bottom petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M54,82 Q62,70 54,60 Q46,70 54,82"/>
+    
+    <!-- Left petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M26,54 Q38,62 48,54 Q38,46 26,54"/>
+    
+    <!-- Right petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M82,54 Q70,62 60,54 Q70,46 82,54"/>
+    
+    <!-- Top-right petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M74,34 Q64,42 58,50 Q66,46 74,34"/>
+    
+    <!-- Top-left petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M34,34 Q44,42 50,50 Q42,46 34,34"/>
+    
+    <!-- Bottom-right petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M74,74 Q64,66 58,58 Q66,62 74,74"/>
+    
+    <!-- Bottom-left petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M34,74 Q44,66 50,58 Q42,62 34,74"/>
+</vector>

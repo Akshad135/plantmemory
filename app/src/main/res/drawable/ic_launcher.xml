@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Background -->
+    <path
+        android:fillColor="#FCFCFD"
+        android:pathData="M0,0h48v48H0z"/>
+    
+    <!-- Center dot -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M24,24 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"/>
+    
+    <!-- Top petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M24,10 Q29,17 24,22 Q19,17 24,10"/>
+    
+    <!-- Bottom petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M24,38 Q29,31 24,26 Q19,31 24,38"/>
+    
+    <!-- Left petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M10,24 Q17,29 22,24 Q17,19 10,24"/>
+    
+    <!-- Right petal -->
+    <path
+        android:fillColor="#5B4FE8"
+        android:pathData="M38,24 Q31,29 26,24 Q31,19 38,24"/>
+    
+    <!-- Top-right petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M34,14 Q28,19 26,24 Q30,20 34,14"/>
+    
+    <!-- Top-left petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M14,14 Q20,19 22,24 Q18,20 14,14"/>
+    
+    <!-- Bottom-right petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M34,34 Q28,29 26,24 Q30,28 34,34"/>
+    
+    <!-- Bottom-left petal -->
+    <path
+        android:fillColor="#8B83F0"
+        android:pathData="M14,34 Q20,29 22,24 Q18,28 14,34"/>
+</vector>

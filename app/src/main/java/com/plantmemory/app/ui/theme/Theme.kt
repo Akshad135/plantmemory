@@ -1,31 +1,41 @@
 package com.plantmemory.app.ui.theme
 
 import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+/**
+ * Simple light color scheme for Plant Memory
+ */
 private val LightColorScheme = lightColorScheme(
     primary = IndigoPrimary,
-    onPrimary = BackgroundLight,
-    primaryContainer = IndigoLight,
-    onPrimaryContainer = TextPrimary,
+    onPrimary = Color.White,
+    primaryContainer = IndigoVeryLight,
+    onPrimaryContainer = IndigoDark,
+    
     secondary = IndigoLight,
-    onSecondary = TextPrimary,
-    secondaryContainer = SurfaceVariant,
-    onSecondaryContainer = TextPrimary,
+    onSecondary = Color.White,
+    secondaryContainer = IndigoVeryLight,
+    onSecondaryContainer = IndigoDark,
+    
     background = BackgroundLight,
     onBackground = TextPrimary,
     surface = SurfaceLight,
     onSurface = TextPrimary,
     surfaceVariant = SurfaceVariant,
-    onSurfaceVariant = TextMuted,
-    outline = IndigoVeryLight
+    onSurfaceVariant = TextSecondary,
+    
+    outline = PlantUnselected,
+    error = ErrorColor,
+    onError = Color.White,
+    errorContainer = ErrorLight,
+    onErrorContainer = ErrorColor
 )
 
 @Composable

@@ -27,6 +27,7 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
+import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -43,9 +44,9 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * 2x2 Small Plant Widget.
- * Shows latest plant, memory text snippet, day name, and date of latest entry.
- * Opens to home screen showing latest memory when clicked.
+ * Material 3 styled 2x2 Small Plant Widget.
+ * Shows latest plant, memory text snippet, day name, and date.
+ * Opens to garden screen with latest memory when clicked.
  */
 class SmallPlantWidget : GlanceAppWidget() {
     
@@ -56,17 +57,17 @@ class SmallPlantWidget : GlanceAppWidget() {
             null
         }
         
-        // Get latest entry by timestamp (most recent recorded)
+        // Get latest entry
         val recentEntries = repository?.let { 
             runBlocking { it.getRecentEntries(1) }
         } ?: emptyList()
         val latestEntry = recentEntries.firstOrNull()
         
-        // Format date of the latest entry
-        val dayFormat = SimpleDateFormat("EEEE", Locale.US)
-        val dateFormat = SimpleDateFormat("MM.dd", Locale.US)
+        // Format date
+        val dayFormat = SimpleDateFormat("EEE", Locale.US)
+        val dateFormat = SimpleDateFormat("MMM d", Locale.US)
         val entryDate = latestEntry?.let { Date(it.timestamp) } ?: Date()
-        val dayOfWeek = dayFormat.format(entryDate).lowercase()
+        val dayOfWeek = dayFormat.format(entryDate)
         val date = dateFormat.format(entryDate)
         
         provideContent {
@@ -88,7 +89,6 @@ class SmallPlantWidget : GlanceAppWidget() {
         dayOfWeek: String,
         date: String
     ) {
-        // Create intent to open home screen and show latest memory
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra(MainActivity.EXTRA_SHOW_LATEST_MEMORY, true)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -98,80 +98,93 @@ class SmallPlantWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(ColorProvider(R.color.widget_background))
-                .cornerRadius(20.dp)
+                .cornerRadius(24.dp)
                 .clickable(actionStartActivity(intent))
-                .padding(12.dp)
+                .padding(14.dp)
         ) {
             Column(
                 modifier = GlanceModifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
-                // Top: day name and date
+                // Top: Date badge
                 Row(
                     modifier = GlanceModifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = dayOfWeek,
-                        style = TextStyle(
-                            color = ColorProvider(R.color.indigo_primary),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Medium
+                    // Day chip with accent background
+                    Box(
+                        modifier = GlanceModifier
+                            .background(ColorProvider(R.color.indigo_container))
+                            .cornerRadius(8.dp)
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = dayOfWeek,
+                            style = TextStyle(
+                                color = ColorProvider(R.color.indigo_primary),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         )
-                    )
+                    }
                     
-                    Spacer(modifier = GlanceModifier.defaultWeight())
+                    Spacer(modifier = GlanceModifier.width(6.dp))
                     
                     Text(
                         text = date,
                         style = TextStyle(
                             color = ColorProvider(R.color.text_muted),
-                            fontSize = 11.sp
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     )
                 }
                 
-                Spacer(modifier = GlanceModifier.height(4.dp))
-                
-                // Center: Plant icon
+                // Center: Plant icon in container
                 Box(
                     modifier = GlanceModifier
                         .fillMaxWidth()
                         .defaultWeight(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (latestEntry != null) {
-                        Image(
-                            provider = ImageProvider(
-                                PlantResources.getPlantDrawable(
-                                    latestEntry.plantType,
-                                    latestEntry.plantVariant
-                                )
-                            ),
-                            contentDescription = "Latest plant",
-                            modifier = GlanceModifier.size(48.dp)
-                        )
-                    } else {
-                        Image(
-                            provider = ImageProvider(R.drawable.plant_simple_1),
-                            contentDescription = "Plant",
-                            modifier = GlanceModifier.size(48.dp)
-                        )
+                    Box(
+                        modifier = GlanceModifier
+                            .size(56.dp)
+                            .background(ColorProvider(R.color.indigo_container))
+                            .cornerRadius(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (latestEntry != null) {
+                            Image(
+                                provider = ImageProvider(
+                                    PlantResources.getPlantDrawable(
+                                        latestEntry.plantType,
+                                        latestEntry.plantVariant
+                                    )
+                                ),
+                                contentDescription = "Latest plant",
+                                modifier = GlanceModifier.size(36.dp)
+                            )
+                        } else {
+                            Image(
+                                provider = ImageProvider(R.drawable.plant_simple_1),
+                                contentDescription = "Plant",
+                                modifier = GlanceModifier.size(36.dp)
+                            )
+                        }
                     }
                 }
                 
-                Spacer(modifier = GlanceModifier.height(4.dp))
-                
-                // Bottom: Memory text snippet
-                val memoryText = latestEntry?.text?.take(40) ?: "plant memory"
-                val displayText = if ((latestEntry?.text?.length ?: 0) > 40) "$memoryText..." else memoryText
+                // Bottom: Memory text
+                val memoryText = latestEntry?.text?.take(50) ?: "tap to add memory"
+                val displayText = if ((latestEntry?.text?.length ?: 0) > 50) "$memoryText..." else memoryText
                 
                 Text(
                     text = displayText,
                     style = TextStyle(
                         color = ColorProvider(R.color.text_primary),
-                        fontSize = 10.sp,
-                        textAlign = TextAlign.Center
+                        fontSize = 11.sp,
+                        textAlign = TextAlign.Start
                     ),
                     maxLines = 2
                 )
@@ -181,7 +194,7 @@ class SmallPlantWidget : GlanceAppWidget() {
 }
 
 /**
- * Receiver for the small 2x2 widget.
+ * Receiver for the 2x2 widget.
  */
 class SmallPlantWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = SmallPlantWidget()

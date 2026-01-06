@@ -18,9 +18,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,17 +37,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.plantmemory.app.data.JournalEntry
 import com.plantmemory.app.ui.components.BottomNavBar
 import com.plantmemory.app.ui.components.BottomNavItem
 import com.plantmemory.app.ui.components.MemoryDetailOverlay
 import com.plantmemory.app.ui.theme.IndigoPrimary
 
+// Premium easing curve
+private val SmoothEasing = CubicBezierEasing(0.4f, 0.0f, 0.2f, 1.0f)
+
 /**
- * Main Garden Screen showing the calendar grid of plants.
+ * Main Garden Screen with Material 3 styling.
  */
 @Composable
 fun GardenScreen(
@@ -61,7 +69,6 @@ fun GardenScreen(
     // Auto-show latest memory if opened from widget
     LaunchedEffect(showLatestMemoryOnStart, uiState.entries) {
         if (showLatestMemoryOnStart && !hasShownLatestMemory && uiState.entries.isNotEmpty()) {
-            // Get the latest entry by timestamp
             val latest = uiState.entries.maxByOrNull { it.timestamp }
             if (latest != null) {
                 selectedEntry = latest
@@ -81,35 +88,49 @@ fun GardenScreen(
                 .statusBarsPadding()
                 .navigationBarsPadding()
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             
-            // Stats header (entry count and days remaining)
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            // Stats header with M3 Card
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ),
+                shape = RoundedCornerShape(20.dp)
             ) {
-                Text(
-                    text = uiState.entries.size.toString(),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                )
-                val daysRemaining = 365 - uiState.entries.size
-                Text(
-                    text = if (daysRemaining > 0) "$daysRemaining more days of growth" else "garden complete!",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = uiState.entries.size.toString(),
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-1).sp
+                        ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    val daysRemaining = 365 - uiState.entries.size
+                    Text(
+                        text = if (daysRemaining > 0) "$daysRemaining more days of growth" else "garden complete!",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             
-            // Calendar grid - takes available space
+            // Calendar grid
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 8.dp)
             ) {
                 CalendarGrid(
                     entries = uiState.entries,
@@ -122,14 +143,14 @@ fun GardenScreen(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // Bottom section: Two rows - Year tabs on top, Nav in center
+            // Bottom section
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Year tabs row (horizontally scrollable)
+                // Year chips (M3 FilterChips)
                 if (uiState.availableYears.size > 1) {
                     val scrollState = rememberScrollState()
                     Row(
@@ -140,10 +161,20 @@ fun GardenScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         uiState.availableYears.forEach { year ->
-                            YearTab(
-                                year = year,
-                                isSelected = year == uiState.selectedYear,
-                                onClick = { viewModel.selectYear(year) }
+                            FilterChip(
+                                selected = year == uiState.selectedYear,
+                                onClick = { viewModel.selectYear(year) },
+                                label = { 
+                                    Text(
+                                        text = year.toString(),
+                                        fontWeight = if (year == uiState.selectedYear) FontWeight.SemiBold else FontWeight.Normal
+                                    )
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                                ),
+                                shape = RoundedCornerShape(12.dp)
                             )
                         }
                     }
@@ -151,7 +182,7 @@ fun GardenScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 
-                // Bottom nav centered
+                // Bottom nav
                 BottomNavBar(
                     selectedItem = selectedNavItem,
                     onItemSelected = { item ->
@@ -164,53 +195,17 @@ fun GardenScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
         
         // Memory detail overlay
         MemoryDetailOverlay(
             entry = selectedEntry,
-            onDismiss = { selectedEntry = null }
-        )
-    }
-}
-
-/**
- * Individual year tab chip.
- */
-@Composable
-fun YearTab(
-    year: Int,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val smoothEasing = CubicBezierEasing(0.4f, 0.0f, 0.2f, 1.0f)
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1f else 0.95f,
-        animationSpec = tween(durationMillis = 200, easing = smoothEasing),
-        label = "tabScale"
-    )
-    
-    Box(
-        modifier = modifier
-            .scale(scale)
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                if (isSelected) IndigoPrimary else IndigoPrimary.copy(alpha = 0.1f)
-            )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Text(
-            text = year.toString(),
-            style = MaterialTheme.typography.labelLarge,
-            color = if (isSelected) Color.White else IndigoPrimary,
-            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+            onDismiss = { selectedEntry = null },
+            onDelete = { entry ->
+                viewModel.deleteEntry(entry)
+                selectedEntry = null
+            }
         )
     }
 }

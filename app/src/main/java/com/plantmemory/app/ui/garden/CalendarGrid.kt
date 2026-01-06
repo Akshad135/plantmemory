@@ -3,7 +3,6 @@ package com.plantmemory.app.ui.garden
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -28,9 +27,6 @@ import java.util.Locale
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-/**
- * Data class for a calendar day cell.
- */
 data class CalendarDay(
     val dayOfYear: Int,
     val dayOfMonth: Int,
@@ -40,14 +36,9 @@ data class CalendarDay(
 )
 
 /**
- * Unified 365-day grid that fits on screen without scrolling.
- * Uses Canvas for empty dots + positioned Images for plants.
- * 
- * Scaling logic:
- * - Full garden (365): Plants fill ~90% of cell, tightly packed like reference
- * - Medium garden (100-200): Plants fill ~100-110% of cell, slight overlap
- * - Small garden (<50): Plants fill 150-200% of cell, very prominent
- * - Dots are inverse: tiny when few entries, more visible when full
+ * 365-day grid like the reference:
+ * - Icons large and clumped together
+ * - Dots tiny and faded for empty days
  */
 @Composable
 fun CalendarGrid(
@@ -56,66 +47,48 @@ fun CalendarGrid(
     onDayClick: (CalendarDay) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Build calendar days for the year
     val calendarDays = remember(year, entries) {
         buildCalendarDays(year, entries)
     }
     
-    // Filter only days with entries for rendering plants
     val daysWithEntries = remember(calendarDays) {
         calendarDays.filter { it.entry != null }
     }
     
-    // Grid dimensions: 19 columns fits 365 days nicely
+    // Grid: 19 columns
     val columns = 19
     val totalDays = calendarDays.size
     val rows = ceil(totalDays.toFloat() / columns).toInt()
     
-    // Dynamic sizing based on entry count
     val entryCount = entries.size
     
-    // Plant size relative to cell: 
-    // - Full garden: 0.85 (tight fit like reference image)
-    // - Medium: slightly larger
-    // - Few entries: much larger to stand out
-    val plantSizeRatio = when {
-        entryCount >= 300 -> 0.85f   // Full garden - tight fit
-        entryCount >= 200 -> 0.90f   // Almost full
-        entryCount >= 100 -> 1.0f    // Medium - fill cell
-        entryCount >= 50 -> 1.2f     // Half full - slightly overlap
-        entryCount >= 20 -> 1.5f     // Few entries - prominent
-        entryCount >= 5 -> 2.0f      // Very few - very large
-        else -> 2.5f                  // 1-4 entries - huge
+    // Subtle scaling based on entry count
+    // Few entries = slightly larger icons, many = slightly smaller (still clumped)
+    val iconSizeRatio = when {
+        entryCount >= 300 -> 1.2f    // Full garden
+        entryCount >= 200 -> 1.25f
+        entryCount >= 100 -> 1.3f
+        entryCount >= 50 -> 1.35f
+        entryCount >= 20 -> 1.4f
+        entryCount >= 5 -> 1.5f
+        else -> 1.6f                  // Very few - slightly larger
     }
     
-    // Dot visibility: almost invisible when few entries, more visible when full
-    val dotAlpha = when {
-        entryCount >= 300 -> 0.15f
-        entryCount >= 200 -> 0.12f
-        entryCount >= 100 -> 0.10f
-        entryCount >= 50 -> 0.08f
-        else -> 0.05f                 // Few entries - barely visible dots
-    }
-    
-    val dotSizeRatio = when {
-        entryCount >= 300 -> 0.12f   // Full - slightly visible
-        entryCount >= 200 -> 0.10f
-        entryCount >= 100 -> 0.08f
-        entryCount >= 50 -> 0.06f
-        else -> 0.04f                 // Few entries - tiny dots
-    }
+    val dotAlpha = 0.12f
+    val dotSizeRatio = 0.04f
     
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val density = LocalDensity.current
+        
         val cellWidthPx = constraints.maxWidth.toFloat() / columns
         val cellHeightPx = constraints.maxHeight.toFloat() / rows
         val cellSizePx = minOf(cellWidthPx, cellHeightPx)
         
-        val plantSizePx = cellSizePx * plantSizeRatio
-        val plantSizeDp = with(density) { plantSizePx.toDp() }
+        val iconSizePx = cellSizePx * iconSizeRatio
+        val iconSizeDp = with(density) { iconSizePx.toDp() }
         val dotRadius = cellSizePx * dotSizeRatio
         
-        // Draw dots for all empty days using Canvas (fast)
+        // Draw tiny faded dots for empty days
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -149,14 +122,13 @@ fun CalendarGrid(
             }
         }
         
-        // Render plants as positioned Images (only for days with entries)
+        // Large icons clumped together
         daysWithEntries.forEach { day ->
-            val index = day.dayOfYear - 1 // dayOfYear is 1-indexed
+            val index = day.dayOfYear - 1
             val col = index % columns
             val row = index / columns
-            // Center the plant in the cell (may overflow if size > cell)
-            val offsetX = (col * cellWidthPx + (cellWidthPx - plantSizePx) / 2).roundToInt()
-            val offsetY = (row * cellHeightPx + (cellHeightPx - plantSizePx) / 2).roundToInt()
+            val offsetX = (col * cellWidthPx + (cellWidthPx - iconSizePx) / 2).roundToInt()
+            val offsetY = (row * cellHeightPx + (cellHeightPx - iconSizePx) / 2).roundToInt()
             
             key(day.dayOfYear) {
                 Image(
@@ -169,7 +141,7 @@ fun CalendarGrid(
                     contentDescription = "Memory on day ${day.dayOfYear}",
                     modifier = Modifier
                         .offset { IntOffset(offsetX, offsetY) }
-                        .size(plantSizeDp),
+                        .size(iconSizeDp),
                     colorFilter = ColorFilter.tint(IndigoPrimary)
                 )
             }
@@ -177,9 +149,6 @@ fun CalendarGrid(
     }
 }
 
-/**
- * Build calendar days for a year, matching entries to their dates.
- */
 private fun buildCalendarDays(year: Int, entries: List<JournalEntry>): List<CalendarDay> {
     val calendar = Calendar.getInstance()
     calendar.set(Calendar.YEAR, year)
@@ -188,7 +157,6 @@ private fun buildCalendarDays(year: Int, entries: List<JournalEntry>): List<Cale
     
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     
-    // Map entries by date string for O(1) lookup
     val entriesByDate = entries.associateBy { entry ->
         dateFormat.format(Date(entry.timestamp))
     }

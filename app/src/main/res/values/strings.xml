@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Plant Memory</string>
-    <string name="widget_name">Plant Memory Garden</string>
-    <string name="small_widget_name">Plant Memory</string>
+    <string name="app_name">Bloom</string>
+    <string name="widget_name">Bloom Garden</string>
+    <string name="small_widget_name">Bloom</string>
     <string name="widget_description">View your memory garden</string>
     <string name="days_of_growth">%d days of growth</string>
     <string name="edit">edit</string>
     <string name="done">Done</string>
     <string name="enter_memory">Write your memory...</string>
-    <string name="tiny_widget_description">Show your latest plant</string>
+    <string name="tiny_widget_description">Show your latest memory</string>
 </resources>

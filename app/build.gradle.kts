@@ -11,26 +11,37 @@ android {
 
     defaultConfig {
         applicationId = "com.plantmemory.app"
-        minSdk = 26
+        minSdk = 21  // Android 5.0+ (covers 99%+ of devices)
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Universal APK - include all ABIs
         ndk {
-            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
         }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+    
+    // Create universal APK (single APK for all architectures)
+    splits {
+        abi {
+            isEnable = false  // Disable ABI splits = universal APK
+        }
+    }
+    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -70,6 +81,9 @@ dependencies {
     
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+    
+    // WorkManager (for periodic widget updates)
+    implementation(libs.androidx.work.runtime.ktx)
     
     // Debug
     debugImplementation(libs.androidx.ui.tooling)
